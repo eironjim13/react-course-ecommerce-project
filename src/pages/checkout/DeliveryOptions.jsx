@@ -1,7 +1,19 @@
-import dayjs from 'dayjs'
-import { formatMoney } from '../../utils/money'
+import dayjs from 'dayjs';
+import { formatMoney } from '../../utils/money';
+import axios from 'axios';
 
-export function DeliveryOptions({ deliveryOptions, cartItem}) {
+export function DeliveryOptions({ deliveryOptions, cartItem, loadCart }) {
+  const updateDeliveryOption = async (optionId) => {
+    try {
+      await axios.put(`/api/cart-items/${cartItem.productId}`, {
+        deliveryOptionId: optionId
+      });
+      await loadCart();
+    } catch (error) {
+      console.error('Failed to update delivery option:', error);
+    }
+  };
+
   return (
     <div className="delivery-options">
       <div className="delivery-options-title">
@@ -9,29 +21,23 @@ export function DeliveryOptions({ deliveryOptions, cartItem}) {
       </div>
 
       {deliveryOptions.map((option) => {
-        let priceString = 'FREE Shipping';
-
-        if (option.priceCents > 0) {
-          priceString = `${formatMoney(option.priceCents)} - Shipping`;
-        }
+        const priceString = option.priceCents > 0
+          ? `${formatMoney(option.priceCents)} - Shipping`
+          : 'FREE Shipping';
 
         return (
-          <div
-            key={option.id}
-            className="delivery-option"
-          >
+          <div key={option.id} className="delivery-option">
             <input
               type="radio"
               checked={option.id === cartItem.deliveryOptionId}
               className="delivery-option-input"
               name={`delivery-option-${cartItem.productId}`}
-              onChange={() => { }}
+              onChange={() => updateDeliveryOption(option.id)}
             />
 
             <div>
               <div className="delivery-option-date">
-                {dayjs(option.estimatedDeliveryTimeMs)
-                  .format('dddd, MMMM, D')}
+                {dayjs(option.estimatedDeliveryTimeMs).format('dddd, MMMM D')}
               </div>
 
               <div className="delivery-option-price">

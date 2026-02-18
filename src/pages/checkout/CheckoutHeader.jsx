@@ -1,4 +1,6 @@
 export function CheckoutHeader({ paymentSummary }) {
+  const totalItems = paymentSummary?.totalItems || 0;
+
   return (
     <div className="checkout-header">
       <div className="header-content">
@@ -12,7 +14,7 @@ export function CheckoutHeader({ paymentSummary }) {
         <div className="checkout-header-middle-section">
           Checkout (
           <a className="return-to-home-link" href="/">
-            {paymentSummary.totalItems} items
+            {totalItems} items
           </a>
           )
         </div>

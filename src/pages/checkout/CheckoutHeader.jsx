@@ -1,4 +1,4 @@
-export function CheckoutHeader() {
+export function CheckoutHeader({ paymentSummary }) {
   return (
     <div className="checkout-header">
       <div className="header-content">
@@ -12,7 +12,7 @@ export function CheckoutHeader() {
         <div className="checkout-header-middle-section">
           Checkout (
           <a className="return-to-home-link" href="/">
-            3 items
+            {paymentSummary.totalItems} items
           </a>
           )
         </div>
